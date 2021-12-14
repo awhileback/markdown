@@ -44,7 +44,7 @@ class FootnoteExtension(Extension):
                  "Avoid name collisions across "
                  "multiple calls to reset()."],
             "BACKLINK_TEXT":
-                ["&#8617;",
+                ["&#8676;",
                  "The text string that links from the footnote "
                  "to the reader's place."],
             "BACKLINK_TITLE":
@@ -167,11 +167,11 @@ class FootnoteExtension(Extension):
         div = etree.Element("div")
         div.set('class', 'footnote')
         etree.SubElement(div, "hr")
-        ol = etree.SubElement(div, "ol")
+        ol = etree.SubElement(div, "p")
         surrogate_parent = etree.Element("div")
 
         for index, id in enumerate(self.footnotes.keys(), start=1):
-            li = etree.SubElement(ol, "li")
+            li = etree.SubElement(ol, "span")
             li.set("id", self.makeFootnoteId(id))
             # Parse footnote with surrogate parent as li cannot be used.
             # List block handlers have special logic to deal with li.
@@ -192,7 +192,7 @@ class FootnoteExtension(Extension):
             if len(li):
                 node = li[-1]
                 if node.tag == "p":
-                    node.text = node.text + NBSP_PLACEHOLDER
+                    node.text = '<small>' + str(id) + '. ' + node.text + NBSP_PLACEHOLDER  + '</small>'
                     node.append(backlink)
                 else:
                     p = etree.SubElement(li, "p")
